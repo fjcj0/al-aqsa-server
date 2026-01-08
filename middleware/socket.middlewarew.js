@@ -3,14 +3,14 @@ import { jwtVerify } from 'jose';
 import cookie from 'cookie';
 import { prisma } from '../lib/prisma.js';
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
-export async function socketAuthMiddleware(socket, next) {
+export async function socketUserAuthMiddleware(socket, next) {
     try {
         const rawCookie = socket.handshake.headers.cookie;
         if (!rawCookie) {
             return next(new Error('No cookies found'));
         }
         const cookies = cookie.parse(rawCookie);
-        const token = cookies.token;
+        const token = cookies.user_access_token;
         if (!token) {
             return next(new Error('No auth token'));
         }

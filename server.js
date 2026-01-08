@@ -7,8 +7,8 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import cors from 'cors';
 import { limiter, speedLimiter } from './tools/DDosProtection.js';
-import { socketAuthMiddleware } from './middleware/socket.middlewarew.js';
 import { socketRateLimit } from './tools/socketLimiter.js';
+import { socketUserAuthMiddleware } from './middleware/socket.middlewarew.js';
 const app = express();
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(morgan("dev"));
@@ -38,7 +38,7 @@ const io = new Server(server, {
     pingTimeout: 20000,
     pingInterval: 25000,
 });
-io.use(socketAuthMiddleware);
+io.use(socketUserAuthMiddleware);
 io.on("connection", (socket) => {
     socket.use(
         socketRateLimit({
